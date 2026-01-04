@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   /* Green Sheet (Light Mode Only) */
@@ -14,6 +12,14 @@
   --color-accent: 34, 197, 94; /* Green-500 */
   
   --color-border: 229, 231, 235; /* Gray-200 */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -60,19 +66,153 @@ body {
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+
+  /* Subtle mesh background for auth screens (production-friendly, not distracting) */
+  .auth-mesh {
+    background-image:
+      radial-gradient(900px circle at 15% 20%, rgba(124, 58, 237, 0.18), transparent 55%),
+      radial-gradient(900px circle at 85% 25%, rgba(59, 130, 246, 0.16), transparent 55%),
+      radial-gradient(900px circle at 50% 85%, rgba(236, 72, 153, 0.12), transparent 60%),
+      linear-gradient(135deg, rgba(238, 242, 255, 0.85), rgba(255, 255, 255, 0.9));
+  }
+
+  /* Dark "space" background for login (stars + blue/orange nebula) */
+  .auth-space {
+    background-color: #050816;
+    background-image:
+      /* stars */
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.45) 0, rgba(255,255,255,0.0) 2px),
+      radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.35) 0, rgba(255,255,255,0.0) 2px),
+      radial-gradient(1px 1px at 70% 30%, rgba(255,255,255,0.40) 0, rgba(255,255,255,0.0) 2px),
+      radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.28) 0, rgba(255,255,255,0.0) 2px),
+      /* left blue nebula */
+      radial-gradient(1200px circle at 12% 58%, rgba(56, 189, 248, 0.20), transparent 58%),
+      radial-gradient(900px circle at 18% 22%, rgba(99, 102, 241, 0.18), transparent 55%),
+      /* right warm nebula */
+      radial-gradient(1100px circle at 88% 60%, rgba(251, 146, 60, 0.18), transparent 58%),
+      radial-gradient(900px circle at 82% 32%, rgba(245, 158, 11, 0.14), transparent 55%),
+      /* base vignette */
+      linear-gradient(180deg, rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.92));
+    background-repeat: no-repeat;
+    background-size: auto, auto, auto, auto, auto, auto, auto, auto, auto;
+  }
+
+  /* Dark space/glass background for the dashboard (no assets needed) */
+  .dashboard-space {
+    background-color: #050816;
+    background-image:
+      radial-gradient(1200px circle at 18% 18%, rgba(59, 130, 246, 0.22), transparent 58%),
+      radial-gradient(900px circle at 78% 24%, rgba(168, 85, 247, 0.18), transparent 55%),
+      radial-gradient(900px circle at 80% 78%, rgba(34, 211, 238, 0.12), transparent 60%),
+      radial-gradient(900px circle at 25% 85%, rgba(251, 191, 36, 0.12), transparent 62%),
+      linear-gradient(180deg, rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.92));
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(18px);
+  }
+
+  .glass-panel-strong {
+    background: rgba(2, 6, 23, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(22px);
+  }
+
+  .glow-border-blue {
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.35),
+      0 0 22px rgba(59, 130, 246, 0.18);
+  }
+
+  .glow-border-amber {
+    box-shadow:
+      0 0 0 1px rgba(245, 158, 11, 0.30),
+      0 0 22px rgba(245, 158, 11, 0.14);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(12deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
 @keyframes blob {
-  0% {
+  0%, 100% {
     transform: translate(0px, 0px) scale(1);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
+  50% {
+    transform: translate(20px, -20px) scale(1.1);
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
   }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
+}
+
+.animate-blob {
+  animation: blob 7s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
   }
-  100% {
-    transform: translate(0px, 0px) scale(1);
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
+}
+
+@keyframes water-drift {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 120% 0%; }
+}
+
+@keyframes water-surface {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-24px); }
+}
+
+.water-fill {
+  background-image: linear-gradient(180deg, rgba(56,189,248,0.42), rgba(99,102,241,0.22));
+  background-size: 200% 200%;
+  animation: water-drift 2.6s linear infinite;
+}
+
+.water-surface {
+  background-image: radial-gradient(circle at 12px 6px, rgba(255,255,255,0.25) 0 6px, transparent 7px);
+  background-size: 24px 12px;
+  opacity: 0.45;
+  animation: water-surface 1.35s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob,
+  .animate-float,
+  .animate-gradient-x,
+  .water-fill,
+  .water-surface {
+    animation: none !important;
   }
 }

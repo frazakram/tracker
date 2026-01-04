@@ -25,16 +25,16 @@ export function EmojiPicker({ currentEmoji, onChange }: EmojiPickerProps) {
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-8 w-8 p-0 rounded-full hover:bg-gray-100"
+          className="h-8 w-8 p-0 rounded-full hover:bg-white/10 text-white"
         >
           {currentEmoji ? (
             <span className="text-lg">{currentEmoji}</span>
           ) : (
-            <Smile className="h-4 w-4 text-gray-400" />
+            <Smile className="h-4 w-4 text-white/50" />
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0 border-none shadow-xl" align="start">
+      <PopoverContent className="w-full p-0 border border-white/10 shadow-xl bg-black/40 backdrop-blur-xl" align="start">
         <EmojiPickerReact
           theme={Theme.AUTO}
           onEmojiClick={handleEmojiClick}

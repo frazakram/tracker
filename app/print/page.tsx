@@ -21,7 +21,7 @@ export default function PrintPage() {
         {/* Header */}
         <div className="flex justify-between items-end border-b-2 border-black pb-4 mb-8">
           <div>
-            <h1 className="text-4xl font-extrabold tracking-tighter">ME SUPREME</h1>
+            <h1 className="text-4xl font-extrabold tracking-tighter">Routely</h1>
             <p className="text-sm font-semibold tracking-widest mt-1">IT'S NOT OVER UNTIL I WIN</p>
           </div>
           <div className="text-right">

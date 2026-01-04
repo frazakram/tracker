@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071226"/>
+      <stop offset="0.45" stop-color="#0b1a3a"/>
+      <stop offset="0.75" stop-color="#1d1e49"/>
+      <stop offset="1" stop-color="#3b1a4a"/>
+    </linearGradient>
+
+    <radialGradient id="nebulaLeft" cx="0.18" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#58c7ff" stop-opacity="0.35"/>
+      <stop offset="0.55" stop-color="#2a79ff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="nebulaRightWarm" cx="0.88" cy="0.52" r="0.85">
+      <stop offset="0" stop-color="#ffd18a" stop-opacity="0.42"/>
+      <stop offset="0.35" stop-color="#ff8a6a" stop-opacity="0.18"/>
+      <stop offset="0.75" stop-color="#a855f7" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="bokeh" cx="0.92" cy="0.35" r="0.55">
+      <stop offset="0" stop-color="#ffe0b8" stop-opacity="0.35"/>
+      <stop offset="0.35" stop-color="#ffb26b" stop-opacity="0.18"/>
+      <stop offset="0.7" stop-color="#ff6aa6" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0.35" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="0.65" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="
+        1 0 0 0 0
+        0 1 0 0 0
+        0 0 1 0 0
+        0 0 0 0.85 0" result="g"/>
+      <feMerge>
+        <feMergeNode in="g"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Deterministic starfield -->
+    <pattern id="stars" width="220" height="220" patternUnits="userSpaceOnUse">
+      <circle cx="18" cy="30" r="1" fill="#ffffff" opacity="0.35"/>
+      <circle cx="88" cy="72" r="1" fill="#ffffff" opacity="0.22"/>
+      <circle cx="140" cy="120" r="1" fill="#ffffff" opacity="0.28"/>
+      <circle cx="190" cy="36" r="1" fill="#ffffff" opacity="0.20"/>
+      <circle cx="44" cy="164" r="1" fill="#ffffff" opacity="0.18"/>
+      <circle cx="112" cy="198" r="1" fill="#ffffff" opacity="0.16"/>
+      <circle cx="206" cy="150" r="1" fill="#ffffff" opacity="0.22"/>
+      <circle cx="70" cy="18" r="1" fill="#ffffff" opacity="0.14"/>
+      <circle cx="156" cy="64" r="1" fill="#ffffff" opacity="0.12"/>
+      <circle cx="30" cy="104" r="1" fill="#ffffff" opacity="0.10"/>
+      <circle cx="96" cy="136" r="1" fill="#ffffff" opacity="0.12"/>
+      <circle cx="170" cy="186" r="1" fill="#ffffff" opacity="0.10"/>
+    </pattern>
+  </defs>
+
+  <!-- Base -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+
+  <!-- Nebula layers -->
+  <rect width="1920" height="1080" fill="url(#nebulaLeft)"/>
+  <rect width="1920" height="1080" fill="url(#nebulaRightWarm)"/>
+  <rect width="1920" height="1080" fill="url(#bokeh)"/>
+
+  <!-- Stars (more visible on the left) -->
+  <rect width="1200" height="1080" fill="url(#stars)" opacity="0.9"/>
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#stars)" opacity="0.25"/>
+
+  <!-- Warm bokeh blobs on the right -->
+  <g filter="url(#softBlur)" opacity="0.9">
+    <circle cx="1620" cy="260" r="220" fill="#ffcf99" opacity="0.22"/>
+    <circle cx="1760" cy="420" r="280" fill="#ff9b7a" opacity="0.16"/>
+    <circle cx="1700" cy="740" r="300" fill="#a855f7" opacity="0.14"/>
+    <circle cx="1540" cy="620" r="240" fill="#ff6aa6" opacity="0.10"/>
+  </g>
+
+  <!-- Ribbon / wave accents -->
+  <g filter="url(#glow)" opacity="0.75">
+    <path d="M1030,120 C1260,40 1510,60 1840,220" fill="none" stroke="url(#ribbon)" stroke-width="110" stroke-linecap="round"/>
+    <path d="M980,300 C1230,200 1500,220 1900,420" fill="none" stroke="url(#ribbon)" stroke-width="95" stroke-linecap="round" opacity="0.8"/>
+    <path d="M960,520 C1220,430 1500,460 1920,650" fill="none" stroke="url(#ribbon)" stroke-width="85" stroke-linecap="round" opacity="0.65"/>
+    <path d="M1000,740 C1250,650 1520,690 1920,860" fill="none" stroke="url(#ribbon)" stroke-width="70" stroke-linecap="round" opacity="0.55"/>
+  </g>
+
+  <!-- Vignette -->
+  <radialGradient id="v" cx="0.5" cy="0.5" r="0.75">
+    <stop offset="0" stop-color="#000000" stop-opacity="0"/>
+    <stop offset="1" stop-color="#000000" stop-opacity="0.45"/>
+  </radialGradient>
+  <rect width="1920" height="1080" fill="url(#v)"/>
+</svg>
+
+

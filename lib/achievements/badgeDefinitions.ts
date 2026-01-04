@@ -3,6 +3,8 @@
  * Defines all available badges and their unlock criteria
  */
 
+import { addDays, format, parseISO, startOfWeek } from "date-fns"
+
 export interface Badge {
   id: string
   name: string
@@ -151,16 +153,36 @@ export function calculateBadgeStats(
   Object.values(completions).forEach(dates => dates.forEach(d => allDates.add(d)))
   
   let perfectDays = 0
+  const fullyCompletedDates = new Set<string>()
   allDates.forEach(date => {
-    const allHabitsComplete = habits.every(habit => 
+    const allHabitsComplete = habits.length > 0 && habits.every(habit =>
       (completions[habit.id] || []).includes(date)
     )
-    if (allHabitsComplete) perfectDays++
+    if (allHabitsComplete) {
+      perfectDays++
+      fullyCompletedDates.add(date)
+    }
   })
   
   // Count perfect weeks (Mon-Fri all complete)
-  // This is a simplified version - you could enhance this
-  const perfectWeeks = 0 // TODO: Implement week checking logic
+  // A "perfect week" is defined as all habits completed for Monday-Friday (5 days).
+  // We count unique week-starts (Monday) that satisfy this.
+  const candidateWeekStarts = new Set<string>()
+  fullyCompletedDates.forEach(dateStr => {
+    const d = parseISO(dateStr)
+    const weekStart = startOfWeek(d, { weekStartsOn: 1 })
+    candidateWeekStarts.add(format(weekStart, "yyyy-MM-dd"))
+  })
+
+  let perfectWeeks = 0
+  candidateWeekStarts.forEach(weekStartStr => {
+    const weekStart = parseISO(weekStartStr)
+    // Check Mon..Fri
+    const isPerfect = Array.from({ length: 5 }, (_, i) =>
+      fullyCompletedDates.has(format(addDays(weekStart, i), "yyyy-MM-dd"))
+    ).every(Boolean)
+    if (isPerfect) perfectWeeks++
+  })
   
   return {
     totalCompletions,

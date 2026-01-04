@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { ToastViewport } from "@/components/ui/ToastViewport";
 
 const font = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Me Supreme - Digital Advantage",
+  title: "Routely - Digital Advantage",
   description: "Advanced habit tracking for high performers.",
 };
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={font.className}>{children}</body>
+      <body className={font.className}>
+        {children}
+        <ToastViewport />
+      </body>
     </html>
   );
 }

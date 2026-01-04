@@ -4,15 +4,77 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { headers } from 'next/headers'
+import { z } from 'zod'
 
-export async function login(formData: FormData) {
+// ============================================
+// Zod Validation Schemas
+// ============================================
+
+const emailSchema = z
+  .string()
+  .min(1, 'Email is required')
+  .email('Please enter a valid email address')
+  .max(255, 'Email must be 255 characters or less')
+  .toLowerCase()
+  .trim()
+
+const passwordSchema = z
+  .string()
+  .min(1, 'Password is required')
+  .min(6, 'Password must be at least 6 characters')
+  .max(72, 'Password must be 72 characters or less') // bcrypt limit
+
+const signupPasswordSchema = z
+  .string()
+  .min(1, 'Password is required')
+  .min(8, 'Password must be at least 8 characters')
+  .max(72, 'Password must be 72 characters or less')
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+    'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+  )
+
+const loginSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+})
+
+const signupSchema = z.object({
+  email: emailSchema,
+  password: signupPasswordSchema,
+})
+
+// ============================================
+// Types
+// ============================================
+
+export interface AuthResult {
+  error?: string
+  success?: boolean
+  message?: string
+}
+
+// ============================================
+// Server Actions
+// ============================================
+
+export async function login(formData: FormData): Promise<AuthResult | never> {
+  // Extract and validate form data
+  const rawData = {
+    email: formData.get('email'),
+    password: formData.get('password'),
+  }
+
+  const validation = loginSchema.safeParse(rawData)
+  
+  if (!validation.success) {
+    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    return { error: errorMessage }
+  }
+
+  const { email, password } = validation.data
+
   const supabase = await createClient()
-
-  // Validate form data, or use Zod validation passed from client
-  // Here we assume client passed valid simple data, but for production
-  // we re-validate.
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -20,6 +82,10 @@ export async function login(formData: FormData) {
   })
 
   if (error) {
+    // Provide user-friendly error messages
+    if (error.message.includes('Invalid login credentials')) {
+      return { error: 'Invalid email or password' }
+    }
     return { error: error.message }
   }
 
@@ -27,14 +93,26 @@ export async function login(formData: FormData) {
   redirect('/')
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData): Promise<AuthResult> {
+  // Extract and validate form data
+  const rawData = {
+    email: formData.get('email'),
+    password: formData.get('password'),
+  }
+
+  const validation = signupSchema.safeParse(rawData)
+  
+  if (!validation.success) {
+    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    return { error: errorMessage }
+  }
+
+  const { email, password } = validation.data
+
   const supabase = await createClient()
   
   // Need origin for email confirmation link
   const origin = (await headers()).get('origin')
-
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
 
   // In development mode, auto-confirm users to skip email verification
   const isDevelopment = process.env.NODE_ENV === 'development'
@@ -52,6 +130,10 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
+    // Provide user-friendly error messages
+    if (error.message.includes('already registered')) {
+      return { error: 'An account with this email already exists' }
+    }
     return { error: error.message }
   }
 
@@ -63,35 +145,34 @@ export async function signup(formData: FormData) {
   return { success: true, message }
 }
 
-export async function signout() {
+export async function signout(): Promise<never> {
   const supabase = await createClient()
   await supabase.auth.signOut()
   
-  // Clear client-side state
-  if (typeof window !== 'undefined') {
-    const { useHabitStore } = await import('@/store/useHabitStore')
-    useHabitStore.getState().clearAllData()
-  }
+  // Note: Client-side state (localStorage) should be cleared by the client
+  // after redirect. Server actions cannot access window/localStorage.
   
   redirect('/login')
 }
 
-export async function loginWithGithub() {
-    const supabase = await createClient()
-    const origin = (await headers()).get('origin')
+export async function loginWithGithub(): Promise<AuthResult | never> {
+  const supabase = await createClient()
+  const origin = (await headers()).get('origin')
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: {
-            redirectTo: `${origin}/auth/callback`,
-        },
-    })
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+    },
+  })
 
-    if (error) {
-        return { error: error.message }
-    }
+  if (error) {
+    return { error: error.message }
+  }
 
-    if (data.url) {
-        redirect(data.url)
-    }
+  if (data.url) {
+    redirect(data.url)
+  }
+
+  return { error: 'Failed to initialize GitHub login' }
 }

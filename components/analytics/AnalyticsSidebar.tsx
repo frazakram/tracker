@@ -1,17 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Sheet, X, TrendingUp, Calendar, Zap, ArrowRight } from "lucide-react"
+import { Sheet, X, Calendar, Zap, ArrowRight } from "lucide-react"
 import { startOfWeek, addDays, format, isAfter } from "date-fns"
 import { Button } from "@/components/ui/Button"
 import { useHabitStore } from "@/store/useHabitStore"
 import { BadgeGallery } from "@/components/achievements/BadgeGallery"
 import { HabitHeatmap } from "./HabitHeatmap"
 import Link from "next/link"
+import { useDeepDiveStore } from "@/store/useDeepDiveStore"
 
 export function AnalyticsSidebar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const isOpen = useDeepDiveStore((s) => s.isOpen)
+  const setOpen = useDeepDiveStore((s) => s.setOpen)
   const { habits, completions } = useHabitStore()
 
   // Simple stats for deep dive
@@ -20,15 +22,6 @@ export function AnalyticsSidebar() {
 
   return (
     <>
-      <Button
-        onClick={() => setIsOpen(true)}
-        variant="outline"
-        className="fixed bottom-32 right-10 z-50 rounded-full shadow-2xl border-2 border-green-500 text-green-700 bg-white hover:bg-green-50 h-14 w-14 p-0 md:h-auto md:w-auto md:px-6 md:py-3"
-      >
-        <TrendingUp className="h-6 w-6 md:mr-2" />
-        <span className="hidden md:inline font-bold">Deep Dive</span>
-      </Button>
-
       <AnimatePresence>
         {isOpen && (
           <>
@@ -37,8 +30,8 @@ export function AnalyticsSidebar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
             />
 
             {/* Sidebar */}
@@ -47,22 +40,22 @@ export function AnalyticsSidebar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 20 }}
-              className="fixed top-0 right-0 h-full w-full md:w-[400px] shadow-2xl border-l border-gray-200 overflow-y-auto"
-              style={{ backgroundColor: "white", zIndex: 9999, maxWidth: "600px" }}
+              className="fixed top-0 right-0 h-full w-full md:w-[420px] shadow-2xl border-l border-white/10 overflow-y-auto glass-panel-strong"
+              style={{ zIndex: 9999, maxWidth: "600px" }}
             >
-              <div className="p-6 relative bg-white">
+              <div className="p-6 relative">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-black text-gray-800">Analytics Deep Dive</h2>
-                  <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
-                    <X className="h-6 w-6 text-gray-400" />
+                  <h2 className="text-2xl font-black text-white">Analytics Deep Dive</h2>
+                  <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
+                    <X className="h-6 w-6 text-white/60" />
                   </Button>
                 </div>
 
                 <div className="space-y-6">
                   {/* Summary Card */}
-                  <div className="p-6 rounded-2xl border border-green-200 bg-[#f0fdf4]">
+                  <div className="p-6 rounded-2xl glass-panel border border-white/10">
                     <div className="flex items-center gap-4">
-                      <span className="text-sm font-bold text-green-700 uppercase tracking-widest">Total Reps</span>
+                      <span className="text-sm font-bold text-white/70 uppercase tracking-widest">Total Reps</span>
                       
                       <motion.div 
                         animate={{ 
@@ -79,22 +72,22 @@ export function AnalyticsSidebar() {
                             ease: "easeInOut"
                         }}
                       >
-                        <Zap className="h-6 w-6 text-green-600 fill-green-200" />
+                        <Zap className="h-6 w-6 text-emerald-300 fill-emerald-300/20" />
                       </motion.div>
 
-                      <span className="text-4xl font-black text-gray-900 leading-none">{totalCompleted}</span>
+                      <span className="text-4xl font-black text-white leading-none">{totalCompleted}</span>
                     </div>
                   </div>
 
                   {/* Heatmap Section */}
-                  <div className="p-4 rounded-2xl border border-gray-100 bg-white">
+                  <div className="p-4 rounded-2xl glass-panel border border-white/10">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-bold text-gray-700">Consistency Map</h3>
-                        <span className="text-[10px] font-normal text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">Last Year</span>
+                        <h3 className="font-bold text-white/85">Consistency Map</h3>
+                        <span className="text-[10px] font-normal text-white/60 bg-white/10 px-2 py-0.5 rounded-full">Last Year</span>
                     </div>
                     
                     <Link href="/analytics" className="block w-full">
-                        <Button variant="outline" className="w-full h-12 border-dashed border-2 text-gray-500 hover:text-green-600 hover:border-green-200 hover:bg-green-50">
+                        <Button variant="outline" className="w-full h-12 border-dashed border-2 border-white/15 text-white/70 hover:text-white hover:border-sky-300/40 hover:bg-white/10">
                             View Full Heatmap
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
@@ -103,8 +96,8 @@ export function AnalyticsSidebar() {
 
                   {/* Top Habits List Component */}
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-gray-400" />
+                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-white/60" />
                       Habit Performance
                     </h3>
                     <div className="space-y-3">
@@ -127,11 +120,11 @@ export function AnalyticsSidebar() {
                         }
 
                         return (
-                          <div key={habit.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
-                            <span className="font-medium text-gray-700">{habit.name}</span>
+                          <div key={habit.id} className="flex items-center justify-between p-3 glass-panel rounded-xl border border-white/10">
+                            <span className="font-medium text-white/85">{habit.name}</span>
                             <div className="text-right">
-                                <span className="font-black text-gray-900 text-lg">{doneCount}</span>
-                                <span className="text-gray-400 text-xs font-medium uppercase ml-1">/ {daysPassed}</span>
+                                <span className="font-black text-white text-lg">{doneCount}</span>
+                                <span className="text-white/50 text-xs font-medium uppercase ml-1">/ {daysPassed}</span>
                             </div>
                           </div>
                         )
