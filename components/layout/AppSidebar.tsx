@@ -35,6 +35,7 @@ export function AppSidebar() {
   const openDeepDive = useDeepDiveStore((s) => s.open)
   const collapsed = useUiStore((s) => s.sidebarCollapsed)
   const toggleSidebar = useUiStore((s) => s.toggleSidebar)
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen)
 
   useEffect(() => {
     const getUser = async () => {
@@ -97,7 +98,10 @@ export function AppSidebar() {
         {/* Deep Dive (opens panel, no duplicate floating button) */}
         <button
           type="button"
-          onClick={openDeepDive}
+          onClick={() => {
+            openDeepDive()
+            setMobileSidebarOpen(false)
+          }}
           className="w-full block relative group"
         >
           <div

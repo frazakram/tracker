@@ -73,11 +73,11 @@ export function StatsCards() {
   return (
     <div className="mb-6 pt-6">
       {/* Clock & Header */}
-      <div className="flex justify-between items-start mb-4 px-1">
-        <div className="flex-1">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4 px-1">
+        <div className="flex-1 min-w-0">
           <h2 className="text-2xl font-bold text-white tracking-tight">Weekly Progress</h2>
           <p className="text-white/60 text-sm mt-1">Track your daily execution</p>
-          <div className="flex items-center gap-4 mt-4">
+          <div className="flex flex-wrap items-center gap-3 mt-4">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -102,7 +102,7 @@ export function StatsCards() {
             <StreakBadge currentStreak={currentStreak} longestStreak={longestStreak} />
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-left sm:text-right">
           <div className="text-3xl font-black text-white tracking-tight">
             {mounted && currentTime ? format(currentTime, "HH:mm") : "--:--"}
           </div>
@@ -151,7 +151,7 @@ export function StatsCards() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.05 }}
               className={[
-                "min-w-[220px] w-[220px] rounded-2xl overflow-hidden flex flex-col snap-start flex-shrink-0",
+                "min-w-[190px] w-[190px] sm:min-w-[220px] sm:w-[220px] rounded-2xl overflow-hidden flex flex-col snap-start flex-shrink-0",
                 "glass-panel border border-white/10 shadow-[0_22px_55px_-40px_rgba(0,0,0,0.9)]",
                 isTodayDate ? "glow-border-blue" : ""
               ].join(" ")}
