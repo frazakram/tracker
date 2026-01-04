@@ -215,7 +215,7 @@ export async function createHabit(
   const validation = createHabitSchema.safeParse({ name, emoji })
   
   if (!validation.success) {
-    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    const errorMessage = validation.error.issues[0]?.message || 'Invalid input'
     return { habit: null, error: errorMessage }
   }
 
@@ -283,7 +283,7 @@ export async function updateHabit(
   const validation = updateHabitSchema.safeParse({ habitId, updates })
   
   if (!validation.success) {
-    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    const errorMessage = validation.error.issues[0]?.message || 'Invalid input'
     return { data: null, error: errorMessage }
   }
 
@@ -360,7 +360,7 @@ export async function fetchUserCompletions(): Promise<Completion[]> {
 export async function fetchUserCompletionsRange(params?: { startDate?: string; endDate?: string }): Promise<Completion[]> {
   const parsed = completionRangeSchema.safeParse(params || {})
   if (!parsed.success) {
-    console.error('Invalid completion range:', parsed.error.errors[0]?.message)
+    console.error('Invalid completion range:', parsed.error.issues[0]?.message)
     return []
   }
 
@@ -398,7 +398,7 @@ export async function addCompletion(
   const validation = completionSchema.safeParse({ habitId, date })
   
   if (!validation.success) {
-    console.error('Validation error:', validation.error.errors[0]?.message)
+    console.error('Validation error:', validation.error.issues[0]?.message)
     return null
   }
 
@@ -438,7 +438,7 @@ export async function removeCompletion(
   const validation = completionSchema.safeParse({ habitId, date })
   
   if (!validation.success) {
-    console.error('Validation error:', validation.error.errors[0]?.message)
+    console.error('Validation error:', validation.error.issues[0]?.message)
     return false
   }
 
@@ -470,7 +470,7 @@ export async function updateCompletionNote(
 ): Promise<ActionResult<boolean>> {
   const validation = completionNoteSchema.safeParse({ habitId, date, note })
   if (!validation.success) {
-    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    const errorMessage = validation.error.issues[0]?.message || 'Invalid input'
     return { data: null, error: errorMessage }
   }
 

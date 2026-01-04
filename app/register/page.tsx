@@ -18,8 +18,8 @@ export default function RegisterPage() {
            throw new Error(result.error)
       }
       if (result?.success) {
-          alert(result.message)
-          if (result.message.includes('Redirecting')) {
+          if (result.message) alert(result.message)
+          if (result.message?.includes('Redirecting')) {
             setTimeout(() => router.push('/login'), 1500)
           }
       }

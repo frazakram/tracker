@@ -68,7 +68,7 @@ export async function login(formData: FormData): Promise<AuthResult | never> {
   const validation = loginSchema.safeParse(rawData)
   
   if (!validation.success) {
-    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    const errorMessage = validation.error.issues[0]?.message || 'Invalid input'
     return { error: errorMessage }
   }
 
@@ -103,7 +103,7 @@ export async function signup(formData: FormData): Promise<AuthResult> {
   const validation = signupSchema.safeParse(rawData)
   
   if (!validation.success) {
-    const errorMessage = validation.error.errors[0]?.message || 'Invalid input'
+    const errorMessage = validation.error.issues[0]?.message || 'Invalid input'
     return { error: errorMessage }
   }
 
